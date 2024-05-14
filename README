@@ -1,0 +1,41 @@
+dmenu - dynamic menu
+====================
+dmenu is an efficient dynamic menu for X.
+
+
+Requirements
+------------
+In order to build dmenu you need the Xlib header files.
+
+
+Installation
+------------
+Edit config.mk to match your local setup (dmenu is installed into
+the /usr/local namespace by default).
+
+Afterwards enter the following command to build and install dmenu
+(if necessary as root):
+
+    make clean install
+
+
+Running dmenu
+-------------
+See the man page for details.
+
+Patches that i applied
+----------------------
+dmenu-alpha-20230110-5.2.diff
+dmenu-caseinsensitive-20200523-db6093f.diff
+dmenu-center-5.2.diff
+dmenu-fuzzyhighlight-caseinsensitive-4.9.diff
+dmenu-fuzzymatch-4.9.diff
+dmenu-grid-4.9.diff
+dmenu-gridnav-5.2.diff
+dmenu-linesbelowprompt-and-fullwidth-20211014.diff
+dmenu-noinput-5.2.diff
+
+dmenu-noinputlinesbelowpromptfullwidth-5.2.diff
+  * This is a special one because i didn't applied the full patch but take some element from it
+    Because it have some conflic with dmenu-grid, i still don't understand how i make it works to
+        this day :/

@@ -945,7 +945,7 @@ usage(void)
 {
 	die("usage: dmenu [-bfiv] [-noi] [-l lines] [-g columns] [-p prompt] [-fn font] [-m monitor]\n"
 	    "             [-nb color] [-nf color] [-sb color] [-sf color]\n"
-	    "             [-nhb color] [-nhf color] [-shb color] [-shf color] [-w windowid]\n", stderr);
+	    "             [-nhb color] [-nhf color] [-shb color] [-shf color] [-w width]\n", stderr);
 }
 
 int
@@ -1004,7 +1004,7 @@ main(int argc, char *argv[])
 		else if (!strcmp(argv[i], "-shf")) /* selected hi foreground color */
 			colors[SchemeSelHighlight][ColFg] = argv[++i];
 		else if (!strcmp(argv[i], "-w"))   /* embedding window id */
-			embed = argv[++i];
+		  	min_width = atoi(argv[++i]);
 		else
 			usage();
 

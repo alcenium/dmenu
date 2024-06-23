@@ -218,7 +218,7 @@ drawmenu(void)
 
 	if (prompt && *prompt) {
 		drw_setscheme(drw, scheme[SchemeSel]);
-		x = drw_text(drw, x, 0, promptw, bh, lrpad / 2, prompt, 0);
+		x = drw_text(drw, x, 0, !draw_input ? mw : promptw, bh, lrpad / 2, prompt, 0);
 	}
 
 	if (draw_input) {
@@ -239,9 +239,16 @@ drawmenu(void)
 		for (item = curr; item != next; item = item->right, i++)
 			drawitem(
 				item,
-				x + ((i / lines) *  ((mw - x) / columns)),
+
+				/* I really don't qualify enough to understand why comment out
+				   "- x" make it draw columns correctly.
+				In other words: WHY IS IT WORKING???
+				*/
+				((!draw_input && prompt && *prompt) ? x - mw : x - promptw)
+				+ ((i / lines) *  ((mw/* - x*/) / columns)),
+
 				y + (((i % lines) + 1) * bh),
-				(mw - x) / columns
+				mw / columns
 			);
 	} else if (matches) {
 		/* draw horizontal list */
@@ -938,7 +945,7 @@ usage(void)
 {
 	die("usage: dmenu [-bfiv] [-noi] [-l lines] [-g columns] [-p prompt] [-fn font] [-m monitor]\n"
 	    "             [-nb color] [-nf color] [-sb color] [-sf color]\n"
-	    "             [-nhb color] [-nhf color] [-shb color] [-shf color] [-w windowid]\n", stderr);
+	    "             [-nhb color] [-nhf color] [-shb color] [-shf color] [-w width]\n", stderr);
 }
 
 int
@@ -997,7 +1004,7 @@ main(int argc, char *argv[])
 		else if (!strcmp(argv[i], "-shf")) /* selected hi foreground color */
 			colors[SchemeSelHighlight][ColFg] = argv[++i];
 		else if (!strcmp(argv[i], "-w"))   /* embedding window id */
-			embed = argv[++i];
+		  	min_width = atoi(argv[++i]);
 		else
 			usage();
 

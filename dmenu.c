@@ -1213,6 +1213,17 @@ main(int argc, char *argv[])
 		else if (!strcmp(argv[i], "-i")) { /* case-insensitive item matching */
 			fstrncmp = strncasecmp;
 			fstrstr = cistrstr;
+		} else if (!strcmp(argv[i], "-mode")) {
+		  char vi_start_mode = argv[++i][0];
+		  switch (vi_start_mode)
+		    {
+		    case '0': start_mode = 0; break;
+		    case '1': start_mode = 1; break;
+		    case 'n': start_mode = 1; break;
+		    case 'i': start_mode = 0; break;
+		    default:
+		    }
+		  using_vi_mode = start_mode;
 		} else if (!strcmp(argv[i], "-vi")) {
 			vi_mode = 1;
 			using_vi_mode = start_mode;

@@ -42,6 +42,9 @@ static unsigned int columns    = 0;
  */
 static const char worddelimiters[] = " ";
 
+/* -n option; preselected item starting from 0 */
+static unsigned int preselected = 0;
+
 /*
  * -vi option; if nonzero, vi mode is always enabled and can be
  * accessed with the global_esc keysym + mod mask

@@ -1146,6 +1146,12 @@ setup(void)
 	promptw = (prompt && *prompt) ? TEXTW(prompt) - lrpad / 4 : 0;
 	inputw = !draw_input ? 0 : mw / 3; /* input width: ~33% of monitor width */
 	match();
+	for (i = 0; i < preselected; i++) {
+		if (sel && sel->right && (sel = sel->right) == next) {
+			curr = next;
+			calcoffsets();
+		}
+	}
 
 	/* create menu window */
 	swa.override_redirect = True;
@@ -1184,9 +1190,35 @@ setup(void)
 static void
 usage(void)
 {
-	die("usage: dmenu [-bfiv] [-noi] [-l lines] [-g columns] [-p prompt] [-fn font] [-m monitor]\n"
+	die("usage: dmenu [-vbfFcin] [-noi] [-l lines] [-g columns] [-p prompt] [-fn font] [-m monitor]\n"
+	    "             [-vi] [-mode n|i|1|0] [-w width]\n"
 	    "             [-nb color] [-nf color] [-sb color] [-sf color]\n"
-	    "             [-nhb color] [-nhf color] [-shb color] [-shf color] [-w width]\n", stderr);
+	    "             [-nhb color] [-nhf color] [-shb color] [-shf color]\n\n"
+	    "Options documentation:\n"
+	    "-v               -- Print verison information\n"
+	    "-b               -- Make dmenu appears at the bottom of the screen\n"
+	    "-f               -- Grab keyboard before reading stdin\n"
+	    "-F               -- Turn off fuzzy finder\n"
+	    "-c               -- Centers dmenu on screen\n"
+	    "-i               -- Case-insensitive item matching\n"
+		"-n               -- Preselect item starting from 0"
+	    "-noi             -- No input mode\n"
+	    "-l  {lines}      -- Set number of lines/rows\n"
+	    "-g  {columns}    -- Set number of columns\n"
+	    "-p  {prompt}     -- Change prompt\n"
+	    "-fn {font}       -- Change font. Ex: -fn \"FiraCode Nerd Font-14\"\n"
+	    "-m  {monitor}    -- Change default monitor that dmenu appears on\n"
+	    "-w  {width}      -- Change window width when centered\n"
+	    "-vi              -- Turn on vi mode (Escape to enter vi mode)\n"
+	    "-mode {n|1|i|0}  -- Set default mode when in vi mode\n"
+	    "-nb {color}      -- Change normal background color\n"
+	    "-nf {color}      -- Change normal foreground color\n"
+	    "-sb {color}      -- Change selected background color\n"
+	    "-sf {color}      -- Change selected foreground color\n"
+	    "-nhb {color}     -- Change highlighted normal background color\n"
+	    "-nhf {color}     -- Change highlighted normal foreground color\n"
+	    "-shb {color}     -- Change highlighted selected background color\n"
+	    "-shf {color}     -- Change highlighted selected foreground color\n", stderr);
 }
 
 int
@@ -1210,6 +1242,8 @@ main(int argc, char *argv[])
 			draw_input = 0;
 		else if (!strcmp(argv[i], "-c"))   /* centers dmenu on screen */
 			centered = 1;
+		else if (!strcmp(argv[i], "-n"))   /* preselected item */
+			preselected = atoi(argv[++i]);
 		else if (!strcmp(argv[i], "-i")) { /* case-insensitive item matching */
 			fstrncmp = strncasecmp;
 			fstrstr = cistrstr;
@@ -1221,7 +1255,6 @@ main(int argc, char *argv[])
 		    case '1': start_mode = 1; break;
 		    case 'n': start_mode = 1; break;
 		    case 'i': start_mode = 0; break;
-		    default:
 		    }
 		  using_vi_mode = start_mode;
 		} else if (!strcmp(argv[i], "-vi")) {
